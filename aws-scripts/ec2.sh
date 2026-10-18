@@ -18,10 +18,10 @@ KEY_NAME="vockey"
 AMI_ID="ami-0b6d9d3d33ba97d99"
 
 # TODO: Perfil de instancia. La instancia EC2 necesita el perfil de AWS Academy para acceder a los secretos. Escribe aquí el nombre del perfil.
-INSTANCE_PROFILE=<perfil>
+INSTANCE_PROFILE=LabInstanceProfile
 
 # TODO: Tipo de instancia. Debe ser de la familia t2 y tener 1 vCPU y 1 GiB de RAM. Escribe aquí el tipo.
-INSTANCE_TYPE=<tipo>
+INSTANCE_TYPE=t2.micro
 
 echo -n "Creando el grupo de seguridad... "
 SG_ID=$(aws ec2 create-security-group \
@@ -36,20 +36,20 @@ echo -n "Creando regla de acceso (http)... "
 aws ec2 authorize-security-group-ingress \
     --group-id "$SG_ID" \
     --protocol tcp \
-    --port <puerto> \
-    --cidr <origen> \
+    --port 80 \
+    --cidr 0.0.0.0/0 \
     --output text >/dev/null
 echo "listo."
 
 echo -n "Creando regla de acceso (ssh)... "
 # TODO: Permite SSH (puerto 22) solo desde la IP pública de la máquina desde la que despliegas (los scripts usan ssh y scp), con CIDR /32.
 # Pista: https://checkip.amazonaws.com devuelve tu IP pública.
-MY_IP=<tu ip publica>
+MY_IP=79.116.220.125
 aws ec2 authorize-security-group-ingress \
     --group-id "$SG_ID" \
     --protocol tcp \
-    --port <puerto> \
-    --cidr <tu ip>/32 \
+    --port 22 \
+    --cidr 79.116.220.125/32 \
     --output text >/dev/null
 echo "listo."
 
